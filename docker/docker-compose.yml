@@ -8,6 +8,9 @@ services:
       - GIT_REPO_URL=${GIT_REPO_URL}
       - ANTHROPIC_BASE_URL=${ANTHROPIC_BASE_URL}
       - ANTHROPIC_AUTH_TOKEN=${ANTHROPIC_AUTH_TOKEN}
+      - GIT_USER_NAME=${GIT_USER_NAME}
+      - GIT_USER_EMAIL=${GIT_USER_EMAIL}
+      - GIT_TOKEN=${GIT_TOKEN}
     stdin_open: true
     tty: true
     volumes:
