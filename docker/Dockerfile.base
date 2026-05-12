@@ -1,0 +1,29 @@
+FROM ubuntu:24.04
+
+ARG DOTNET_VERSION=9.0
+ARG NODE_VERSION=22
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    git \
+    ca-certificates \
+    gnupg \
+    unzip \
+    procps \
+    software-properties-common \
+    && rm -rf /var/lib/apt/lists/*
+
+# .NET SDK (Ubuntu 24.04 ships .NET in its own repos — no MS prod feed needed)
+RUN add-apt-repository ppa:dotnet/backports \
+    && apt-get update \
+    && apt-get install -y dotnet-sdk-${DOTNET_VERSION} \
+    && rm -rf /var/lib/apt/lists/*
+
+# Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /workspace

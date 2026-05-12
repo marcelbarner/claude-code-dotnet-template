@@ -1,0 +1,18 @@
+services:
+  dev:
+    image: dev-env:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    environment:
+      - GIT_REPO_URL=${GIT_REPO_URL}
+      - ANTHROPIC_BASE_URL=${ANTHROPIC_BASE_URL}
+      - ANTHROPIC_AUTH_TOKEN=${ANTHROPIC_AUTH_TOKEN}
+    stdin_open: true
+    tty: true
+    volumes:
+      - workspace:/workspace
+    working_dir: /workspace/repo
+
+volumes:
+  workspace:

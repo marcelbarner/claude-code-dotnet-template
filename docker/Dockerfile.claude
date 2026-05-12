@@ -1,0 +1,8 @@
+FROM dev-base:latest
+
+# Install Claude Code CLI
+RUN npm install -g @anthropic-ai/claude-code
+
+# Global Claude Code settings
+RUN mkdir -p /root/.claude
+COPY config/claude-settings.json /root/.claude/settings.json

@@ -1,0 +1,13 @@
+FROM dev-claude:latest
+
+COPY scripts/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+ENV GIT_REPO_URL=""
+ENV ANTHROPIC_BASE_URL="https://api.anthropic.com"
+ENV ANTHROPIC_AUTH_TOKEN=""
+
+WORKDIR /workspace
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["/bin/bash"]

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(& \"D:\\\\Development\\\\claude-code-dotnet-template\\\\docker\\\\scripts\\\\build.ps1\" 2>&1)",
+      "Bash(dotnet build *)"
+    ]
+  }
+}
