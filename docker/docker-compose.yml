@@ -1,5 +1,6 @@
 services:
   dev:
+    container_name: claude-dev   # interactive session only; one-shot prompts use claude-prompt.ps1
     image: dev-env:latest
     build:
       context: .
