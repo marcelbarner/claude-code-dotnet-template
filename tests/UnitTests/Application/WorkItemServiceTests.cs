@@ -62,4 +62,49 @@ public sealed class WorkItemServiceTests
 
         await action.Should().ThrowAsync<NotFoundException>();
     }
+
+    [Fact]
+    public async Task UpdateAsync_ShouldUpdateWorkItem_WhenRequestIsValid()
+    {
+        IWorkItemRepository repository = Substitute.For<IWorkItemRepository>();
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+        IClock clock = Substitute.For<IClock>();
+        clock.UtcNow.Returns(FixedNow);
+
+        WorkItem existing = WorkItem.Create("Original title", null, FixedNow.AddHours(-1));
+        repository.GetByIdAsync(existing.Id, CancellationToken.None).Returns(existing);
+
+        WorkItemService sut = new(repository, unitOfWork, clock);
+
+        WorkItemDto result = await sut.UpdateAsync(
+            existing.Id,
+            new UpdateWorkItemRequest("Updated title", "New description", WorkItemStatus.Completed),
+            CancellationToken.None);
+
+        result.Title.Should().Be("Updated title");
+        result.Description.Should().Be("New description");
+        result.Status.Should().Be(WorkItemStatus.Completed);
+        result.LastModifiedUtc.Should().Be(FixedNow);
+        await unitOfWork.Received(1).SaveChangesAsync(CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_ShouldThrowNotFound_WhenWorkItemDoesNotExist()
+    {
+        IWorkItemRepository repository = Substitute.For<IWorkItemRepository>();
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+        IClock clock = Substitute.For<IClock>();
+
+        repository.GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns((WorkItem?)null);
+
+        WorkItemService sut = new(repository, unitOfWork, clock);
+
+        Func<Task> action = async () => await sut.UpdateAsync(
+            Guid.NewGuid(),
+            new UpdateWorkItemRequest("Title", null, WorkItemStatus.Active),
+            CancellationToken.None);
+
+        await action.Should().ThrowAsync<NotFoundException>();
+        await unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
 }

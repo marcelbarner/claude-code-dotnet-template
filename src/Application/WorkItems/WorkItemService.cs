@@ -30,6 +30,34 @@ public sealed class WorkItemService(
             : workItem.ToDto();
     }
 
+    public async Task<WorkItemDto> UpdateAsync(Guid id, UpdateWorkItemRequest request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        WorkItem? workItem = await workItemRepository.GetByIdAsync(id, cancellationToken);
+        if (workItem is null)
+        {
+            throw new NotFoundException($"Work item '{id}' was not found.");
+        }
+
+        DateTimeOffset now = clock.UtcNow;
+        workItem.Rename(request.Title, now);
+        workItem.UpdateDescription(request.Description, now);
+
+        switch (request.Status)
+        {
+            case WorkItemStatus.Active:
+                workItem.Activate(now);
+                break;
+            case WorkItemStatus.Completed:
+                workItem.Complete(now);
+                break;
+        }
+
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+        return workItem.ToDto();
+    }
+
     public async Task<PagedResult<WorkItemDto>> ListAsync(int skip, int take, CancellationToken cancellationToken)
     {
         if (skip < 0)

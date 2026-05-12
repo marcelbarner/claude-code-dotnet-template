@@ -42,4 +42,21 @@ public sealed class WorkItemsController(WorkItemService workItemService) : Contr
 
         return Created($"/api/v1/work-items/{created.Id}", created);
     }
+
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType<WorkItemDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<WorkItemDto>> UpdateAsync(
+        Guid id,
+        [FromBody] UpdateWorkItemHttpRequest request,
+        CancellationToken cancellationToken)
+    {
+        WorkItemDto updated = await workItemService.UpdateAsync(
+            id,
+            new UpdateWorkItemRequest(request.Title, request.Description, request.Status),
+            cancellationToken);
+
+        return Ok(updated);
+    }
 }
