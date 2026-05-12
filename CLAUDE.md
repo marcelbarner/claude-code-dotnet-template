@@ -62,3 +62,14 @@ This file is the Claude Code-specific instruction entrypoint. Cross-tool equival
 - Review warnings, analyzer output, and architectural drift.
 - Confirm project references still point inward only.
 - Leave README and template guidance in sync with the code.
+
+## 9. Pull Request After Changes
+- After completing any non-trivial change, commit the work and open a PR against `main`.
+- Use `gh pr create` with a concise title and a summary covering what changed and why.
+- Do not push directly to `main`; always use a feature branch.
+
+## 10. Always Use Subagents
+- Delegate all non-trivial research, exploration, and implementation tasks to specialized subagents via the Agent tool.
+- Use the appropriate subagent type (e.g., `dotnet-engineer`, `ef-core-engineer`, `azure-engineer`, `test-automator`, `code-reviewer`) instead of doing the work inline.
+- Run independent subagents in parallel by issuing multiple Agent tool calls in a single message.
+- Reserve inline work for trivial single-step operations only.
