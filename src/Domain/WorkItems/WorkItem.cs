@@ -54,6 +54,13 @@ public sealed class WorkItem : AuditableEntity
         RefreshRowVersion();
     }
 
+    public void Activate(DateTimeOffset updatedUtc)
+    {
+        Status = WorkItemStatus.Active;
+        Touch(updatedUtc);
+        RefreshRowVersion();
+    }
+
     public void Complete(DateTimeOffset updatedUtc)
     {
         Status = WorkItemStatus.Completed;
