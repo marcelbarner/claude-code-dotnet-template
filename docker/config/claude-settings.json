@@ -1,4 +1,9 @@
 {
+  "theme": "dark",
+  "autoUpdater": {
+    "channel": "stable"
+  },
+  "hasCompletedProjectOnboarding": true,
   "permissions": {
     "allow": [
       "Bash(*)",
