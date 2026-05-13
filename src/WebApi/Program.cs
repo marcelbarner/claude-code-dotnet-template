@@ -3,19 +3,19 @@ using WebApi.Infrastructure;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 builder.Configuration
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
     .AddEnvironmentVariables();
 
-builder.Logging.ClearProviders();
 builder.Logging.AddJsonConsole();
 
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
-builder.Services.AddHealthChecks();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 if (builder.Environment.IsDevelopment())
@@ -30,7 +30,7 @@ if (builder.Environment.IsDevelopment())
 WebApplication app = builder.Build();
 
 app.UseExceptionHandler();
-app.MapHealthChecks("/health");
+app.MapDefaultEndpoints();
 
 if (app.Environment.IsDevelopment())
 {
