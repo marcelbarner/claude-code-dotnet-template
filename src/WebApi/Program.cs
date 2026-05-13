@@ -18,10 +18,24 @@ builder.Services.AddOpenApi();
 builder.Services.AddHealthChecks();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddCors(options =>
+        options.AddDefaultPolicy(policy =>
+            policy.WithOrigins("http://localhost:4200")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()));
+}
+
 WebApplication app = builder.Build();
 
 app.UseExceptionHandler();
 app.MapHealthChecks("/health");
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseCors();
+}
 
 if (app.Environment.IsDevelopment())
 {
