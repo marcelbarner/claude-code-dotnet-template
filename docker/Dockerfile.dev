@@ -9,5 +9,7 @@ ENV ANTHROPIC_AUTH_TOKEN=""
 
 WORKDIR /workspace
 
+USER claude
+
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["/bin/bash"]
