@@ -17,7 +17,7 @@ if [ -z "$PROMPT" ]; then
 fi
 
 ID="claude-$(date +%Y%m%d%H%M%S)-$RANDOM"
-RUN_ARGS=(run --name "$ID" --env-file "$ENV_FILE" dev-env:latest claude -p "$PROMPT")
+RUN_ARGS=(run --name "$ID" --env-file "$ENV_FILE" dev-env:latest claude -p "$PROMPT" --dangerously-skip-permissions)
 
 if [ -n "$MODEL" ]; then
     RUN_ARGS+=(--model "$MODEL")

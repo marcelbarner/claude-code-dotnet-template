@@ -26,7 +26,7 @@ if (-not $Keep) {
     $runArgs += "--rm"
 }
 
-$runArgs += @("dev-env:latest", "claude", "-p", $Prompt, "--output-format", "stream-json", "--verbose")
+$runArgs += @("dev-env:latest", "claude", "-p", $Prompt, "--output-format", "stream-json", "--verbose", "--dangerously-skip-permissions")
 
 if ($Model -ne "") {
     $runArgs += "--model"
